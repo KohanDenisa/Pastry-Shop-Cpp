@@ -1,5 +1,11 @@
 #pragma once
-#include "product.cpp"
+#include "product.h"
+#include<ostream>
+#include<vector>
+#include<iostream>
+#include<fstream>
+#include<cstdio>
+using namespace std;
 
 class PastryShop {
 public:
@@ -24,7 +30,7 @@ public:
 	Product& get(unsigned int i)const;
 	std::string toString() const;
 	friend ostream& operator<<(ostream& s, const PastryShop& arr);
-	
+
 
 private:
 	Product* product_list;

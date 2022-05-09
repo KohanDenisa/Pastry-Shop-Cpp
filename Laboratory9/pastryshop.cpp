@@ -10,18 +10,18 @@ PastryShop::PastryShop()
 PastryShop::PastryShop(Product* prl, int np, int c)
 {
 	nrprod = np;
-	capacity = capacity;
-	product_list = new Product[capacity]();
+	this->capacity = capacity;
+	this->product_list = new Product[capacity]();
 	for (int i = 0; i < nrprod; i++)
-		product_list[i] = prl[i];
+		this->product_list[i] = prl[i];
 }
 
 PastryShop::PastryShop(const PastryShop& other)
 {
 
-	nrprod = other.nrprod;
-	capacity = other.capacity;
-	product_list = new Product[other.capacity]();
+	this->nrprod = other.nrprod;
+	this->capacity = other.capacity;
+	this->product_list = new Product[other.capacity]();
 
 	if (product_list == nullptr) {
 		cerr << "PastryShop(const PastryShop& other): failed to allocate memory" << endl;
@@ -29,7 +29,7 @@ PastryShop::PastryShop(const PastryShop& other)
 	}
 
 	for (unsigned int i = 0; i < nrprod; i++)
-		product_list[i] = other.product_list[i];
+		this->product_list[i] = other.product_list[i];
 }
 
 PastryShop& PastryShop::operator=(const PastryShop& other)
@@ -37,19 +37,19 @@ PastryShop& PastryShop::operator=(const PastryShop& other)
 
 	if (this != &other)
 	{
-	
-	nrprod = other.nrprod;
-	capacity = other.capacity;
-	delete[] this->product_list;
-	product_list = new Product[other.capacity]();
 
-	if (product_list == nullptr) {
-		cerr << "PastryShop(const PastryShop& other): failed to allocate memory" << endl;
-		exit(-1);
-	}
+		nrprod = other.nrprod;
+		capacity = other.capacity;
+		delete[] this->product_list;
+		product_list = new Product[other.capacity]();
 
-	for (unsigned int i = 0; i < nrprod; i++)
-		product_list[i] = other.product_list[i];
+		if (product_list == nullptr) {
+			cerr << "PastryShop(const PastryShop& other): failed to allocate memory" << endl;
+			exit(-1);
+		}
+
+		for (unsigned int i = 0; i < nrprod; i++)
+			this->product_list[i] = other.product_list[i];
 	}
 	return *this;
 }
@@ -115,13 +115,13 @@ Product& PastryShop::get(unsigned int i)const
 
 }
 
-std::string PastryShop::toString() const
-{
-	std::string s = std::string("Pastry shop with capacity: %d, has %d number of products and items:", capacity, nrprod);
-	for (int i = 0; i < nrprod; i++)
-		s = s + product_list[i].toString();
-	return s;
-}
+//std::string PastryShop::toString() const
+//{
+//	std::string s = std::string("Pastry shop with capacity: %d, has %d number of products and items:", capacity, nrprod);
+//	for (int i = 0; i < nrprod; i++)
+//		s = s + product_list[i].toString();
+//	return s;
+//}
 
 ostream& operator<<(std::ostream& out, const PastryShop& p)
 {
@@ -147,4 +147,4 @@ void PastryShop::resize(unsigned int newCapacity) {
 
 	delete[] this->product_list;
 	this->product_list = newproduct_list;
-}
+}  

@@ -3,6 +3,11 @@
 
 #include <iostream>
 #include <string>
+#include<ostream>
+#include<istream>
+#include<iomanip>
+#include<iostream>
+#include<cctype>
 using namespace std;
 
 class Product {
@@ -25,7 +30,7 @@ public:
 private:
 	int id;
 	string name;
-	float weigth;
+	float weight;
 	float price;
 	string type;
 
