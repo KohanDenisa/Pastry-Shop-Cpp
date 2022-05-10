@@ -13,7 +13,7 @@ Controller::Controller(Product* repo, int nr, int c)
 }
 
 
-void Controller::addProduct(Product* prod)
+void Controller::appendProduct(Product* prod)
 {
 	this->repository.append(*prod);
 	undoStack.push(std::make_pair(ActionType::ADD, prod));
@@ -22,7 +22,52 @@ void Controller::addProduct(Product* prod)
 void Controller::displayAll()
 {
 	for (int i = 0; i < repository.getNrprod(); i++)
-		cout << repository.get(i).toString() << endl;
+		cout << repository.get_i(i).toString() << endl;
+}
+
+Product& Controller::get(unsigned int i) const
+{
+	return repository.get_i(i);
+}
+
+int Controller::getNrProd()
+{
+	return repository.getNrprod();
+}
+
+void Controller::insert_at_i(Product p, int index)
+{
+	try
+	{
+		repository.insert(p, index);
+	}
+	catch (int e)
+	{
+		if (e == 1)
+			cout << "Index out of bounds!";
+	}
+	
+}
+
+void Controller::update_at_i(int index, int i, string n, float w, float p, string t)
+{
+	try
+	{
+		repository.update(index, i, n, w, p, t);
+	}
+	catch (int e)
+	{
+		if (e == 1)
+			cout << "Index out of bounds!";
+	}
+	
+}
+
+void Controller::filter_and_display_by_type(string t)
+{
+	PastryShop p = repository.filterByType(t);
+	for (int i = 0; i < p.getNrprod(); i++)
+		cout << p.get_i(i).toString() << endl;
 }
 
 bool Controller::removeByIndex(int i)
@@ -31,6 +76,12 @@ bool Controller::removeByIndex(int i)
 	if(&product)
 		undoStack.push(std::make_pair(ActionType::REMOVE, &product));
 	return true;
+}
+
+Product Controller::popback()
+{
+	Product p = repository.pop_back();
+	return p;
 }
 
 bool Controller::undo()
@@ -75,29 +126,15 @@ bool Controller::redo()
 
 void Controller::read()
 {
-	ifstream f("file.txt");
-	int capacity, nrprod;
-	f >> capacity >> nrprod;
-	Product* products = new Product[capacity]();
-	for (int i = 0; i < nrprod; i++) {
-		int id;
-		string name, type;
-		float weight, price;
-		f >> id  >> name >> weight >> price >> type;
-		products[i].setId(id);
-		products[i].setName(name);
-		products[i].setWeight(weight);
-		products[i].setPrice(price);
-		products[i].setType(type);
-	}
+	
 }
 
 void Controller::save()
 {
-	ofstream f("file.txt");
-	f << repository.getCapacity() << " " << repository.getNrprod() << endl;
-	for (int i = 0; i < repository.getNrprod(); i++)
-		f << repository.get(i).getId() << " " << repository.get(i).getName() << " " << repository.get(i).getWeight() << " " << repository.get(i).getPrice() << " " << repository.get(i).getType() << endl;
 
 
+}
+
+void Controller::iterateAndSave()
+{
 }

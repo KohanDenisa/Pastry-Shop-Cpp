@@ -61,7 +61,6 @@ PastryShop::~PastryShop()
 
 void PastryShop::append(Product p, bool* err)
 {
-
 	if (nrprod == capacity) {
 		resize(capacity * 2);
 	}
@@ -69,7 +68,40 @@ void PastryShop::append(Product p, bool* err)
 	nrprod++;
 }
 
-Product PastryShop::popBack()
+void PastryShop::insert(Product p, int index)
+{
+	if (0 > index || index >= nrprod)
+		throw 1;
+	else
+	{
+	
+	if (nrprod == capacity)
+		resize(2 * capacity);
+	nrprod++;
+	for (int i = nrprod; i > index; i--)
+		product_list[i] = product_list[i - 1];
+	product_list[index] = p;
+	}
+
+
+}
+
+void PastryShop::update(int index, int i, string n, float w, float p, string t)
+{
+	if (0 > index || index >= nrprod)
+		throw 1;
+	else
+	{
+		product_list[i].setId(i);
+		product_list[i].setName(n);
+		product_list[i].setWeight(w);
+		product_list[i].setPrice(p);
+		product_list[i].setType(t);
+	}
+
+}
+
+Product PastryShop::pop_back()
 {
 	if (nrprod == 0) {
 
@@ -102,7 +134,7 @@ Product PastryShop::remove(unsigned int index)
 	}
 }
 
-Product& PastryShop::get(unsigned int i)const
+Product& PastryShop::get_i(unsigned int i)const
 {
 
 	if (i >= 0 && i < nrprod) {
@@ -115,19 +147,79 @@ Product& PastryShop::get(unsigned int i)const
 
 }
 
-//std::string PastryShop::toString() const
-//{
-//	std::string s = std::string("Pastry shop with capacity: %d, has %d number of products and items:", capacity, nrprod);
-//	for (int i = 0; i < nrprod; i++)
-//		s = s + product_list[i].toString();
-//	return s;
-//}
+PastryShop PastryShop::filterByType(string t)
+{
+	PastryShop result(nullptr, 0, 2);
+	for (int i = 0; i < nrprod; i++)
+		if (product_list[i].getType() == t)
+			result.append(product_list[i]);
+	return result;
+}
+
+std::string PastryShop::toString() const
+{
+	std::string s = std::string("Pastry shop with capacity: %d, has %d number of products and items:", capacity, nrprod);
+	for (int i = 0; i < nrprod; i++)
+		s = s + product_list[i].toString();
+	return s;
+}
+
+void PastryShop::read()
+{
+
+		ifstream inputFile;
+		string data;
+		inputFile.open("file.csv", fstream::in);
+		do 
+		{
+			inputFile >> data;
+			//  char* p = strdup(data.c_str());
+			//  products[i].setId(id);
+			//	products[i].setName(name);
+			//	products[i].setWeight(weight);
+			//	products[i].setPrice(price);
+			//	products[i].setType(type);
+		} while (!EOF);
+		inputFile.close();
+	
+
+
+		//ifstream f("file.txt");
+		//int capacity, nrprod;
+		//f >> capacity >> nrprod;
+		//Product* products = new Product[capacity]();
+		//for (int i = 0; i < nrprod; i++) {
+		//	int id;
+		//	string name, type;
+		//	float weight, price;
+		//	f >> id >> name >> weight >> price >> type;
+		//	products[i].setId(id);
+		//	products[i].setName(name);
+		//	products[i].setWeight(weight);
+		//	products[i].setPrice(price);
+		//	products[i].setType(type);
+		//}
+		
+}
+
+void PastryShop::save()
+{
+	/*ofstream f("file.csv");
+	f << "Id" << " " << "Name" << " " << "Weight" << " " << "Price" << " " << "Type" << endl;
+	for (int i = 0; i < repository.getNrprod(); i++)
+		f << repository.get(i).getId() << ", " << repository.get(i).getName() << ", " << repository.get(i).getWeight() << ", " << repository.get(i).getPrice() << ", " << repository.get(i).getType() << endl;*/
+
+}
+
+void PastryShop::iterateAndSave()
+{
+}
 
 ostream& operator<<(std::ostream& out, const PastryShop& p)
 {
 	out << "Pastry shop with capacity:" << p.getCapacity() << " has " << p.getNrprod() << " number of products and items:";
 	for (int i = 0; i < p.getNrprod(); i++)
-		out << p.get(i);
+		out << p.get_i(i);
 	return out;
 }
 
