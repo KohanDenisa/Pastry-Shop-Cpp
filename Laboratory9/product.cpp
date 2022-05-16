@@ -88,3 +88,24 @@ ostream& operator<<(std::ostream& out, const Product& p)
 	out << "Product with id:" << p.getId() << " named:" << p.getName() << ", has weight:" << p.getWeight() << ", price:" << p.getPrice() << " and type" << p.getType();
 	return out;
 }
+
+
+Product& Product::operator=(const Product& other)
+{
+	if (this == &other)
+		return *this;
+	id = other.id;
+	name = other.name;
+	weight = other.weight;
+	price = other.price;
+	type = other.type;
+	return *this;
+
+}
+
+bool operator==(const Product& a, const Product& b)
+{
+	if (a.getId() != b.getId() || a.getName() != b.getName() || a.getWeight() != b.getWeight() || a.getPrice() != b.getPrice() || a.getType() != b.getType()  )
+		return false;
+	return true;
+}

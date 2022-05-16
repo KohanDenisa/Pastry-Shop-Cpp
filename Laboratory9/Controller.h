@@ -15,19 +15,19 @@ enum class ActionType {
 class Controller
 {
 public:
-	Controller();
-	Controller(Product* repo, int nr, int c);
-	void appendProduct(Product* prod);//add an element at the end of the repository
-	bool removeByIndex(int i);// remove an element from position i
-	Product popback();
-	void displayAll();
-	Product& get(unsigned int i)const;
-	int getNrProd();
-	void insert_at_i(Product p, int index);//insert an element at a given index in the repository
-	void update_at_i(int index, int i, string n, float w, float p, string t);//update a product at a agiven index
-	void filter_and_display_by_type(string t);//filter and display a repository by type
-	bool undo();
-	bool redo();
+	Controller();//default constructor
+	Controller(Product* repo, int nr, int c);//constructor
+	void appendProduct(Product prod);//add an element at the end of the repository
+	bool removeById(int id);// remove an element by id 
+	void displayAll();//function that displays all the products 
+	Product& get(unsigned int i)const;//function that gets a product by index
+	Product& getbyid(unsigned int id)const;//function that gets a product by id
+	int getNrProd();//function that gets the number of products
+	void update_by_id(int i, string n, float w, float p, string t);//update a product at a a given index
+	PastryShop filter_and_display_by_type(string t);//filter and display a repository by type
+	PastryShop filter_and_display_by_price(float p);//filter and display a repository by price
+	bool undo();//undo function
+	bool redo();//redo function
 	void read();
 	void save();
 	void iterateAndSave();
@@ -35,8 +35,8 @@ public:
 
 private:
 	PastryShop repository;
-	std::stack<pair<ActionType, Product*>>undoStack;
-	std::stack<pair<ActionType, Product*>>redoStack;
+	std::stack<pair<ActionType, Product>>undoStack;
+	std::stack<pair<ActionType, Product>>redoStack;
 
 };
 

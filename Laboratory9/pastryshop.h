@@ -9,42 +9,40 @@ using namespace std;
 
 class PastryShop {
 public:
-	PastryShop();
-	PastryShop(Product* prl, int np, int c);
+	PastryShop();//default constructor
+	PastryShop(Product* prl, int np, int c);//constructor
 
 	PastryShop(const PastryShop& other);//copy constructor
 	PastryShop& operator=(const PastryShop& other);//asignment operator
 	~PastryShop();//free the allocated memory
 
-	inline unsigned int getNrprod() const { return nrprod; }
-	inline unsigned int getCapacity() const { return capacity; }
-	inline Product* getProduct_list() { return product_list; }
+	inline unsigned int getNrprod() const { return nrprod; }//function that gets the number of products from the Pastry Shop
+	inline unsigned int getCapacity() const { return capacity; }//function that gets the capacity of the Pastry Shop
+	inline Product* getProduct_list() { return product_list; }//function that returns all the products from the Pastry Shop
 
-	void append(Product p, bool* err = nullptr);//add an element at the end of the repository
-	void insert(Product p, int index);//insert an element at a given index in the repository
-	void update(int index, int id, string n, float w, float p, string t);
+	void append(Product p);//add an element at the end of the repository
+	void update(int id, string n, float w, float p, string t);//updating an element chosen by id
+	Product remove(unsigned int id);	// remove an element given by id
+	Product& get_i(unsigned int i)const;// get the element on a position
+	Product& get_by_id(unsigned int id)const;// get the element by a given id
 
-	// remove the element from the end
-	Product pop_back();
 
-	// remove an element from position i
-	Product remove(unsigned int index);
+	PastryShop filterByType(string t);//filtering the Pastry Shop by type
+	PastryShop filterByPrice(float p);//filtering the Pastry Shop by price
 
-	// get the element on a position
-	Product& get_i(unsigned int i)const;
-	PastryShop filterByType(string t);
-
-	std::string toString() const;
+	std::string toString() const;//function that transforms a Pastry Shop object into a string
 	friend ostream& operator<<(ostream& s, const PastryShop& arr);
+	friend bool operator==(const PastryShop& a, const PastryShop& b);
 
 
-	void read();
-	void save();
-	void iterateAndSave();
+	void read_it();
+	void save_it();
+	void iterateAndSave_it();
 
 private:
 	Product* product_list;
 	int nrprod;
 	int capacity;
 	void resize(unsigned int newCapacity);
+	int it;//used for saveIterate
 };

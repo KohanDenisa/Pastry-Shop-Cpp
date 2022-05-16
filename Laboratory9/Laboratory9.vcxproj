@@ -142,12 +142,14 @@
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pastryshop.cpp" />
+    <ClCompile Include="pastryshop_tests.cpp" />
     <ClCompile Include="product.cpp" />
     <ClCompile Include="UserInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controller.h" />
     <ClInclude Include="pastryshop.h" />
+    <ClInclude Include="pastryshop_tests.h" />
     <ClInclude Include="product.h" />
     <ClInclude Include="UserInterface.h" />
   </ItemGroup>

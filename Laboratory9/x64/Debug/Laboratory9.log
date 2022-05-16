@@ -1,7 +1,4 @@
-﻿  UserInterface.cpp
-C:\Users\Denisa\Documents\GitHub\Laboratory9\Laboratory9\UserInterface.cpp(68,32): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Denisa\Documents\GitHub\Laboratory9\Laboratory9\UserInterface.cpp(74,32): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Denisa\Documents\GitHub\Laboratory9\Laboratory9\UserInterface.cpp(82,32): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Denisa\Documents\GitHub\Laboratory9\Laboratory9\UserInterface.cpp(90,32): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Denisa\Documents\GitHub\Laboratory9\Laboratory9\UserInterface.cpp(108,32): warning C4018: '<': signed/unsigned mismatch
+﻿  pastryshop_tests.cpp
+  product.cpp
+  Generating Code...
   Laboratory9.vcxproj -> C:\Users\Denisa\Documents\GitHub\Laboratory9\Laboratory9\x64\Debug\Laboratory9.exe

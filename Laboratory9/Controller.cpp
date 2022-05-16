@@ -13,9 +13,9 @@ Controller::Controller(Product* repo, int nr, int c)
 }
 
 
-void Controller::appendProduct(Product* prod)
+void Controller::appendProduct(Product prod)
 {
-	this->repository.append(*prod);
+	this->repository.append(prod);
 	undoStack.push(std::make_pair(ActionType::ADD, prod));
 }
 
@@ -30,59 +30,52 @@ Product& Controller::get(unsigned int i) const
 	return repository.get_i(i);
 }
 
+Product& Controller::getbyid(unsigned int id) const
+{
+	return repository.get_by_id(id);
+}
+
 int Controller::getNrProd()
 {
 	return repository.getNrprod();
 }
 
-void Controller::insert_at_i(Product p, int index)
+
+void Controller::update_by_id(int i, string n, float w, float p, string t)
 {
 	try
 	{
-		repository.insert(p, index);
+		repository.update(i, n, w, p, t);
 	}
 	catch (int e)
 	{
 		if (e == 1)
-			cout << "Index out of bounds!";
+			cout << "Id not found!";
 	}
 	
 }
 
-void Controller::update_at_i(int index, int i, string n, float w, float p, string t)
-{
-	try
-	{
-		repository.update(index, i, n, w, p, t);
-	}
-	catch (int e)
-	{
-		if (e == 1)
-			cout << "Index out of bounds!";
-	}
-	
-}
-
-void Controller::filter_and_display_by_type(string t)
+PastryShop Controller::filter_and_display_by_type(string t)
 {
 	PastryShop p = repository.filterByType(t);
-	for (int i = 0; i < p.getNrprod(); i++)
-		cout << p.get_i(i).toString() << endl;
+	return p;
+	
 }
 
-bool Controller::removeByIndex(int i)
+PastryShop Controller::filter_and_display_by_price(float p)
 {
-	Product product = this->repository.remove(i);
-	if(&product)
-		undoStack.push(std::make_pair(ActionType::REMOVE, &product));
+	PastryShop p1 = repository.filterByPrice(p);
+	return p1;
+
+}
+
+bool Controller::removeById(int id)
+{
+	Product product = this->repository.remove(id);
+	undoStack.push(std::make_pair(ActionType::REMOVE, product));
 	return true;
 }
 
-Product Controller::popback()
-{
-	Product p = repository.pop_back();
-	return p;
-}
 
 bool Controller::undo()
 {
@@ -98,7 +91,7 @@ bool Controller::undo()
 			{
 				redoStack.push(std::make_pair(ActionType::REMOVE, undoStack.top().second));
 				undoStack.pop();
-				repository.append(*redoStack.top().second);
+				repository.append(redoStack.top().second);
 				return true;
 			}
 	return false;
@@ -118,7 +111,7 @@ bool Controller::redo()
 		{
 			undoStack.push(std::make_pair(ActionType::REMOVE, redoStack.top().second));
 			redoStack.pop();
-			repository.append(*undoStack.top().second);
+			repository.append(undoStack.top().second);
 			return true;
 		}
 	return false;
@@ -126,15 +119,15 @@ bool Controller::redo()
 
 void Controller::read()
 {
-	
+	repository.read_it();
 }
 
 void Controller::save()
 {
-
-
+	repository.save_it();
 }
 
 void Controller::iterateAndSave()
 {
+	repository.iterateAndSave_it();
 }

@@ -2,9 +2,10 @@
 
 PastryShop::PastryShop()
 {
-	product_list = nullptr;
+	capacity = 1;
+	product_list = new Product[capacity]();;
 	nrprod = 0;
-	capacity = 0;
+	it = 0;
 }
 
 PastryShop::PastryShop(Product* prl, int np, int c)
@@ -14,6 +15,7 @@ PastryShop::PastryShop(Product* prl, int np, int c)
 	this->product_list = new Product[capacity]();
 	for (int i = 0; i < nrprod; i++)
 		this->product_list[i] = prl[i];
+	it = 0;
 }
 
 PastryShop::PastryShop(const PastryShop& other)
@@ -57,9 +59,10 @@ PastryShop& PastryShop::operator=(const PastryShop& other)
 PastryShop::~PastryShop()
 {
 	delete[]product_list;
+
 }
 
-void PastryShop::append(Product p, bool* err)
+void PastryShop::append(Product p)
 {
 	if (nrprod == capacity) {
 		resize(capacity * 2);
@@ -68,71 +71,46 @@ void PastryShop::append(Product p, bool* err)
 	nrprod++;
 }
 
-void PastryShop::insert(Product p, int index)
+
+
+void PastryShop::update(int id, string n, float w, float p, string t)
 {
-	if (0 > index || index >= nrprod)
-		throw 1;
-	else
-	{
+	int i, ok = 0;
+	for (i = 0; i < nrprod; i++)
+		if (product_list[i].getId() == id)
+		{
+			product_list[i].setName(n);
+			product_list[i].setWeight(w);
+			product_list[i].setPrice(p);
+			product_list[i].setType(t);
+			ok = 1;
+		}
 	
-	if (nrprod == capacity)
-		resize(2 * capacity);
-	nrprod++;
-	for (int i = nrprod; i > index; i--)
-		product_list[i] = product_list[i - 1];
-	product_list[index] = p;
-	}
-
-
-}
-
-void PastryShop::update(int index, int i, string n, float w, float p, string t)
-{
-	if (0 > index || index >= nrprod)
+	if (ok == 0) {
 		throw 1;
-	else
-	{
-		product_list[i].setId(i);
-		product_list[i].setName(n);
-		product_list[i].setWeight(w);
-		product_list[i].setPrice(p);
-		product_list[i].setType(t);
 	}
-
 }
 
-Product PastryShop::pop_back()
+
+Product PastryShop::remove(unsigned int id)
 {
-	if (nrprod == 0) {
-
-		cerr << "Precondition does not hold: popBack()" << endl;
-		exit(-1);
-	}
-
-
-	Product p = product_list[nrprod];
-	nrprod--;
-
-	return p;
-}
-
-Product PastryShop::remove(unsigned int index)
-{
-	int i;
-
-	if (index >= 0 && index < nrprod) {
-		Product p = product_list[index];
-		for (i = index; i < nrprod - 1; i++)
-			product_list[i] = product_list[i + 1];
-		nrprod--;
-		return p;
-	}
-	else
+	int i, j, ok = 0; for (i = 0; i < nrprod; i++)
+		if (product_list[i].getId() == id)
+		{
+			ok = 1;
+			Product p = product_list[i];
+			for (j = i; j < nrprod - 1; j++)
+				product_list[j] = product_list[j + 1];
+			nrprod--;
+			return p;
+		}
+	if (ok == 0)
 	{
-		cerr << "Precondition does not hold: remove()" << endl;
-		exit(-1);
+		throw 1;
 	}
 }
+
+
 
 Product& PastryShop::get_i(unsigned int i)const
 {
@@ -147,11 +125,38 @@ Product& PastryShop::get_i(unsigned int i)const
 
 }
 
+
+Product& PastryShop::get_by_id(unsigned int id)const
+{
+	int i, ok = 0;
+	for (i = 0; i < nrprod; i++)
+		if (product_list[i].getId() == id)
+		{
+			ok = 1;
+			Product *p = &product_list[i];
+			return *p;
+		}
+	if (ok == 0) {
+		throw 1;
+	}
+}
+
+
+
 PastryShop PastryShop::filterByType(string t)
 {
 	PastryShop result(nullptr, 0, 2);
 	for (int i = 0; i < nrprod; i++)
 		if (product_list[i].getType() == t)
+			result.append(product_list[i]);
+	return result;
+}
+
+PastryShop PastryShop::filterByPrice(float p)
+{
+	PastryShop result(nullptr, 0, 2);
+	for (int i = 0; i < nrprod; i++)
+		if (product_list[i].getPrice() == p)
 			result.append(product_list[i]);
 	return result;
 }
@@ -164,55 +169,90 @@ std::string PastryShop::toString() const
 	return s;
 }
 
-void PastryShop::read()
+bool operator==(const PastryShop& a, const PastryShop& b)
+{
+	if (a.getNrprod() != b.getNrprod())
+		return false;
+	for (int i = 0; i < a.getNrprod(); i++)
+		if (!(a.get_i(i) == b.get_i(i)))
+			return false;
+	return true;
+}
+
+
+void PastryShop::read_it()
 {
 
-		ifstream inputFile;
-		string data;
-		inputFile.open("file.csv", fstream::in);
-		do 
+		ifstream inFile("save.csv");
+		string line;
+		getline(inFile, line);
+		int id;
+		string name;
+		float weight;
+		float price;
+		string type;
+		char* p;
+		
+		while (getline(inFile, line))
 		{
-			inputFile >> data;
-			//  char* p = strdup(data.c_str());
-			//  products[i].setId(id);
-			//	products[i].setName(name);
-			//	products[i].setWeight(weight);
-			//	products[i].setPrice(price);
-			//	products[i].setType(type);
-		} while (!EOF);
-		inputFile.close();
-	
+			char arr[250];
+			strcpy(arr, line.c_str());
+			p = strtok(arr, ",");
+			id = atoi(p);
+			p = strtok(NULL, ",");
+			name = p;
+			p = strtok(NULL, ",");
+			weight = atof(p);
+			p = strtok(NULL, ",");
+			price = atof(p);
+			p = strtok(NULL, ",");
+			type = p;
 
-
-		//ifstream f("file.txt");
-		//int capacity, nrprod;
-		//f >> capacity >> nrprod;
-		//Product* products = new Product[capacity]();
-		//for (int i = 0; i < nrprod; i++) {
-		//	int id;
-		//	string name, type;
-		//	float weight, price;
-		//	f >> id >> name >> weight >> price >> type;
-		//	products[i].setId(id);
-		//	products[i].setName(name);
-		//	products[i].setWeight(weight);
-		//	products[i].setPrice(price);
-		//	products[i].setType(type);
-		//}
+		}
+		Product p2(id, name, weight, price, type);
+		this->append(p2);
+		inFile.close();
 		
 }
 
-void PastryShop::save()
+void PastryShop::save_it()
 {
-	/*ofstream f("file.csv");
-	f << "Id" << " " << "Name" << " " << "Weight" << " " << "Price" << " " << "Type" << endl;
-	for (int i = 0; i < repository.getNrprod(); i++)
-		f << repository.get(i).getId() << ", " << repository.get(i).getName() << ", " << repository.get(i).getWeight() << ", " << repository.get(i).getPrice() << ", " << repository.get(i).getType() << endl;*/
-
+	ofstream outFile("save.csv");
+	outFile << "Id, Name, Weight, Price, Type\n";
+	for (int i = 0; i < nrprod; i++)
+	{
+		outFile << product_list[i].getId() << ",";
+		outFile << product_list[i].getName() << ",";
+		outFile << product_list[i].getWeight() << ",";
+		outFile << product_list[i].getPrice() << ",";
+		outFile << product_list[i].getType() << endl;
+	}
+	outFile.close();
 }
 
-void PastryShop::iterateAndSave()
+void PastryShop::iterateAndSave_it()
 {
+	ofstream outFile; 
+	if (it == 0) {
+		outFile = ofstream("save.csv");
+		outFile << "Id, Name, Weight, Price, Type\n";
+	}
+	else
+		outFile = ofstream("save.csv", ios_base::app);
+
+	if (it < nrprod) 
+	{
+		outFile << product_list[it].getId() << ",";
+		outFile << product_list[it].getName() << ",";
+		outFile << product_list[it].getWeight() << ",";
+		outFile << product_list[it].getPrice() << ",";
+		outFile << product_list[it].getType() << endl;
+		it++;
+	}
+
+	if (it == nrprod)
+		it = 0;
+	outFile.close();
 }
 
 ostream& operator<<(std::ostream& out, const PastryShop& p)

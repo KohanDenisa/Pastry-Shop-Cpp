@@ -4,13 +4,17 @@ void UserInterface::displayMenu()
 {
 	cout << "a - 1.Add a new product" << endl;
 	cout << "d - 2.Display all products" << endl;
-	cout << "p - 3.Remove the product from the end" << endl;
-	cout << "r - 4.Remove a product by a given index " << endl;
-	cout << "i - 5.Insert an element at a given index in the repository " << endl;
-	cout << "u - 6.Update a product at a agiven index " << endl;
-	cout << "f - 7.Filter and display a repository by type " << endl;
-	cout << "g - 8.Get a product by index" << endl;
-	cout << "e - 9.Exit" << endl;
+	cout << "r - 3.Remove a product by a given id " << endl;
+	cout << "u - 4.Update a product at a agiven index " << endl;
+	cout << "ft - 5.Filter and display a repository by type " << endl;
+	cout << "fp - 6.Filter and display a repository by price " << endl;
+	cout << "g - 7.Get a product by id" << endl;
+	cout << "und - 8.Undo" << endl;
+	cout << "red - 9.Redo" << endl;
+	cout << "read - 10.Read" << endl;
+	cout << "save - 11.Save" << endl;
+	cout << "ias - 12.Iterate and save" << endl;
+	cout << "e - 13.Exit" << endl;
 	cout << endl;
 	cout << "Pick a command:" << endl;
 }
@@ -49,8 +53,10 @@ void UserInterface::menu()
 			system("cls");
 			Product pr1, pr2;
 			char x;
-			int index_re, index_ge, index_in, index_up, i = 0;
+			PastryShop s;
+			int id_re, id_ge, id_up, i = 0;
 			string n, fil_type;
+			float fil_price;
 			float w = 0;
 			float p = 0;
 			string t;
@@ -62,64 +68,93 @@ void UserInterface::menu()
 			{
 			case 'a':
 				pr1 = readProduct();
-				control.appendProduct(&pr1);
+				control.appendProduct(pr1);
 				break;
 			case 'd':
 				for (unsigned int i = 0; i < control.getNrProd(); i++) {
 					cout << control.get(i) << " ";
 				}
 				break;
-			case 'p':
-				control.popback();
-				for (unsigned int i = 0; i < control.getNrProd(); i++) {
-					cout << control.get(i) << " ";
-				}
-				break;
 			case 'r':
-				cout << "index_remove:";
-				cin >> index_re;
-				control.removeByIndex(index_re);
-				for (unsigned int i = 0; i < control.getNrProd(); i++) {
-					cout << control.get(i) << " ";
+				try {
+					cout << "id_remove:";
+					cin >> id_re;
+					control.removeById(id_re);
+					for (unsigned int i = 0; i < control.getNrProd(); i++) {
+						cout << control.get(i) << " ";
+					}
 				}
-				break;
-			case 'i':
-				cout << "index_insert:";
-				cin >> index_in;
-				control.insert_at_i(pr2, index_in);
-				for (unsigned int i = 0; i < control.getNrProd(); i++) {
-					cout << control.get(i) << " ";
+				catch (int e)
+				{
+					if (e == 1)
+						cout << "Unavailable id";
 				}
 				break;
 			case 'u':
-				cout << "index_update:";
-				cin >> index_up;
-				cout << "id:";
-				cin >> i;
-				cout << "name:";
-				cin >> n;
-				cout << "weight:";
-				cin >> w;
-				cout << "price:";
-				cin >> p;
-				cout << "type:";
-				cin >> t;
-				control.update_at_i(index_up, i, n, w, p, t);
-				for (unsigned int i = 0; i < control.getNrProd(); i++) {
-					cout << control.get(i) << " ";
+				try
+				{
+					cout << "id_update:";
+					cin >> id_up;
+					cout << "name:";
+					cin >> n;
+					cout << "weight:";
+					cin >> w;
+					cout << "price:";
+					cin >> p;
+					cout << "type:";
+					cin >> t;
+					control.update_by_id(i, n, w, p, t);
+					for (unsigned int i = 0; i < control.getNrProd(); i++) {
+						cout << control.get(i) << " ";
+					}
+				}
+				catch (int e)
+				{
+					if (e == 1)
+						cout << "Unavailable id";
 				}
 				break;
-			case 'f':
+			case 'ft':
 				cout << "filter type:";
 				cin >> fil_type;
-				control.filter_and_display_by_type(fil_type);
+				s = control.filter_and_display_by_type(fil_type);
+				for (int i = 0; i < s.getNrprod(); i++)
+					cout << s.get_i(i).toString() << endl;
+				break;
+			case 'fp':
+				cout << "filter price:";
+				cin >> fil_price;
+				s = control.filter_and_display_by_price(fil_price);
+				for (int i = 0; i < s.getNrprod(); i++)
+					cout << s.get_i(i).toString() << endl;
 				break;
 			case 'g':
-				cout << "index_get:";
-				cin >> index_ge;
-				cout << control.get(index_ge);
+				try {
+				cout << "id_get:";
+				cin >> id_ge;
+				cout << control.getbyid(id_ge);
+					}
+				catch (int e)
+				{
+					if (e == 1)
+						cout << "Unavailable id";
+				}
 				break;
-
+			case 'und':
+				control.undo();
+				break;
+			case 'red':
+				control.redo();
+				break;
+			case 'read':
+				control.read();
+				break;
+			case 'save':
+				control.save();
+				break;
+			case 'ias':
+				control.iterateAndSave();
+				break;
 			case 'e':
 				break;
 			}
@@ -127,5 +162,3 @@ void UserInterface::menu()
 			system("pause");
 		}
 	}
-
-
